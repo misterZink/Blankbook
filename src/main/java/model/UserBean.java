@@ -32,7 +32,7 @@ public class UserBean {
 	public boolean validate(UserBean userBean) {
 		
 		if (SQLConnection.connectSQL()) {
-			return SQLConnection.stateSql(userBean);
+			return SQLConnection.userSql(userBean);
     	}
 	
 		return false;

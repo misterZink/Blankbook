@@ -24,42 +24,59 @@ if (session.getAttribute("user") != null) {
     <!--Fontawesome CDN-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     
-    <link href="css/signIn.css" rel="stylesheet">
+    <!-- cookiealert styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Wruczek/Bootstrap-Cookie-Alert@gh-pages/cookiealert.css">
+    <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
 	
 	
-	
-<div class="container login">
-	<div class="d-flex justify-content-center h-100">
-		<div class="card card-login">
-			<div class="card-header">
-				<h3>Sign In</h3>
-			</div>
-			<div class="card-body">
-				<form action="<%=request.getContextPath()%>/Login" method="post">
-					<div class="input-group form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text"><i class="fas fa-user"></i></span>
+<main class="container login">	
+		<div class="d-flex justify-content-center h-100">
+			<div class="card card-login">
+				<header class="card-header">
+					<h3>Sign In <span id="error"></span></h3>
+				</header>
+				
+				<div class="card-body">
+					<form action="<%=request.getContextPath()%>/Login" method="post">
+						<div class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-user"></i></span>
+							</div>
+							<input type="text" class="form-control" placeholder="Email" name="email" required="required">	
 						</div>
-						<input type="text" class="form-control" placeholder="Email" name="email" required="required">
 						
-					</div>
-					<div class="input-group form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text"><i class="fas fa-key"></i></span>
+						<div class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-key"></i></span>
+							</div>
+							<input type="password" class="form-control" placeholder="Password" name="password" required="required">
 						</div>
-						<input type="password" class="form-control" placeholder="Password" name="password" required="required">
-					</div>
-					<div class="form-group btn_div">
-						<input type="submit" value="Login" class="btn float-right login_btn">
-					</div>
-				</form>
+						
+						<div class="form-group btn_div">
+							<input type="submit" value="Login" class="btn float-right login_btn">
+						</div>
+					</form>
+					<footer id="login-footer">Robin Heidari © 2021</footer>
+				</div>
 			</div>
-
 		</div>
-	</div>
+</main>
+<div class="alert text-center cookiealert" role="alert">
+    <b>Do you like cookies?</b> &#x1F36A; We use cookies to ensure you get the best experience on our website.
+
+    <button type="button" class="btn btn-primary btn-sm acceptcookies" id="acceptcookie">
+        Agree
+    </button>
+	<button type="button" class="btn btn-primary btn-sm declinecookies" id="declinecookie">
+	Decline
+    </button>
+
 </div>
+
+
+<script src="js/cookiealert.js"></script>
 
 </body>
 </html>

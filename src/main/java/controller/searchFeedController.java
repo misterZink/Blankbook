@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,22 +13,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.sql.ResultSet;
+
 import database.SQLConnection;
 import model.FeedBean;
 import model.UserBean;
 
 /**
- * Servlet implementation class feedController
+ * Servlet implementation class searchFeedController
  */
-@WebServlet("/feedController")
+@WebServlet("/searchFeedController")
 @ServletSecurity(value = @HttpConstraint(transportGuarantee = TransportGuarantee.CONFIDENTIAL))
-public class feedController extends HttpServlet {
+public class searchFeedController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public feedController() {
+    public searchFeedController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -72,22 +73,14 @@ public class feedController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String message = request.getParameter("message");
-		String hashTag = request.getParameter("hashTag");
+
+		String searchedWord = request.getParameter("searchInput");
 		
-		
-		// Add # to string if it is missing
-		if(hashTag.indexOf("#") != 0 && !hashTag.equals("")) {
-			hashTag = "#" + hashTag;
-		}
+		FeedBean feedBean = new FeedBean(SQLConnection.getSearchedFeed(searchedWord));
+
 		
 		HttpSession session = request.getSession();
 		UserBean userbean = (UserBean)session.getAttribute("user");
-		
-		SQLConnection.addFeedMessageToSql(message, hashTag, userbean.getName());
-		
-		FeedBean feedBean = new FeedBean(SQLConnection.getFeedFromSql());
-
 		
 		request.setAttribute("user", userbean);
 		request.setAttribute("feedBean", feedBean);

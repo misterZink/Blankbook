@@ -1,21 +1,29 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.HttpConstraint;
+import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.annotation.ServletSecurity.TransportGuarantee;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.SQLConnection;
+import model.FeedBean;
 import model.UserBean;
 
 /**
  * Servlet implementation class LoginController
  */
 @WebServlet("/Login")
+@ServletSecurity(value = @HttpConstraint(transportGuarantee = TransportGuarantee.CONFIDENTIAL))
 public class LoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -43,15 +51,15 @@ public class LoginController extends HttpServlet {
 			if (userBean.validate(userBean)) {
 				
 							
-				// get the session and the request to go to the success page 
+				// get the session and the request to go to the feedpage page 
 				HttpSession session = request.getSession();
 				session.setAttribute("user", userBean);
 				request.setAttribute("user", userBean);
 
-				RequestDispatcher rd = request.getRequestDispatcher("success.jsp");
+				RequestDispatcher rd = request.getRequestDispatcher("feedpage.jsp");
 				rd.forward(request, response);
 			} else {
-				// this only happens if the sessionid is removed, manually or because it timed out and you try to go directly to the "success.jsp"
+				// this only happens if the sessionid is removed, manually or because it timed out and you try to go directly to the "feedpage.jsp"
 				//  goto logout to clean up
 			
 				RequestDispatcher rd = request.getRequestDispatcher("Logout");
@@ -61,6 +69,7 @@ public class LoginController extends HttpServlet {
 		} else {
 			// this should only happen if you try to goto "/Login" manually 
 			response.sendRedirect("index.jsp");
+
 		}
 	}
 
@@ -83,8 +92,8 @@ public class LoginController extends HttpServlet {
 		// Check if the email and pass is correct.
 		if (userBean.validate(userBean)) {
 
-			
-			
+			FeedBean feedBean = new FeedBean(SQLConnection.getFeedFromSql());
+
 			
 			// A new thing here "Session", a way to generate a ID to remember some date on
 			// the client
@@ -93,11 +102,12 @@ public class LoginController extends HttpServlet {
 			
 			// the user is logged in or not
 			session.setAttribute("user", userBean);
-
 			request.setAttribute("user", userBean);
-
+			
+			request.setAttribute("feedBean", feedBean);
+			
 			// RequestDispatcher for when we want to send the request to the new page
-			RequestDispatcher rd = request.getRequestDispatcher("success.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("feedpage.jsp");
 			rd.forward(request, response);
 
 			// response.sendRedirect only goes to the new page, and nothing else

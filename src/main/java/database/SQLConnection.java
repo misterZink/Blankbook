@@ -21,25 +21,20 @@ public class SQLConnection {
 	
 	public static boolean connectSQL() {
 		
-		
 		try {
-			
-			
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");	
 			
 		} catch (Exception e) {
 			System.out.println("Exe Driver: " + e);
 			return false;
 		}
 		
-		
 		try {
-			
 			userConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users?serverTimezone=UTC",DatabaseLogin.getUserName(), DatabaseLogin.getUserPass());
 			feedConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/feed?serverTimezone=UTC",DatabaseLogin.getUserName(), DatabaseLogin.getUserPass());
-			
+		
 			return true;
-			
+		
 		} catch(SQLException e) {
 			System.out.println("connectSQL");
 			System.out.println("SQLException: " + e.getMessage());
@@ -50,8 +45,8 @@ public class SQLConnection {
 	}
 	
 	
-	public static boolean stateSql(UserBean userBean) {
-		
+	
+	public static boolean userSql(UserBean userBean) {
 		
 		try {
 			
@@ -66,10 +61,6 @@ public class SQLConnection {
 			
 			// ResultSet return
 			while (resultSet.next()) {
-
-				// print them
-				System.out.println(resultSet.getInt(1) + "  " + resultSet.getString(2) + "  " + resultSet.getString(3) + " " + resultSet.getString(4));
-
 				userBean.setName(resultSet.getString("fullname"));
 				return true;
 			}
@@ -79,13 +70,15 @@ public class SQLConnection {
 			
 			
 		} catch (SQLException e) {
-			System.out.println("stateSql");
+			System.out.println("userSql");
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("VendorError: " + e.getErrorCode());
 		}
 		return false;
 	}
+	
+	
 	
 	public static void addFeedMessageToSql(String message, String hashTag, String creator) {
 		try {
@@ -103,7 +96,7 @@ public class SQLConnection {
 			feedConnection.endRequest();
 			
 		} catch (SQLException e) {
-			System.out.println("stateSql");
+			System.out.println("addFeedMessageToSql");
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("VendorError: " + e.getErrorCode());
@@ -126,13 +119,15 @@ public class SQLConnection {
 			return resultSet;
 			
 		} catch (SQLException e) {
-			System.out.println("stateSql");
+			System.out.println("getFeedFromSql");
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("VendorError: " + e.getErrorCode());
 		}
 		return null;
 	}
+	
+	
 	
 	public static void stopFeedConnectionSql() {
 		
@@ -146,6 +141,30 @@ public class SQLConnection {
 		}
 	}
 	
+	
+	
+	public static ResultSet getSearchedFeed(String searchWord) {
+		
+		
+		try {
+		String requestQuery = "SELECT * FROM feed WHERE message LIKE ? or hashtag LIKE ?";
+		
+		prepStatement = feedConnection.prepareStatement(requestQuery);
+
+		prepStatement.setString(1, "%"+searchWord+"%");
+		prepStatement.setString(2, "%"+searchWord+"%");
+
+		resultSet = prepStatement.executeQuery(); 
+		return resultSet;
+		} catch (SQLException e) {
+			System.out.println("getSearchedFeed");
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("VendorError: " + e.getErrorCode());
+			return null;
+		}
+		
+	}
 	
 	
 }
