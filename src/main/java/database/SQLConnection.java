@@ -62,7 +62,7 @@ public class SQLConnection {
 			// ResultSet return
 			while (resultSet.next()) {
 				userBean.setName(resultSet.getString("fullname"));
-				closeConnection = true;
+				closeConnection = true;						// Fixa så att connection stängs
 			}
 			
 			userConnection.endRequest();
@@ -110,7 +110,7 @@ public class SQLConnection {
 		try {
 			
 			// fixa query att inte använda *
-			String requestQuery = "SELECT * FROM feed";
+			String requestQuery = "SELECT message, hashtag, creator, datetime FROM feed";
 
 			prepStatement = feedConnection.prepareStatement(requestQuery);
 			resultSet = prepStatement.executeQuery();
@@ -147,8 +147,8 @@ public class SQLConnection {
 		
 		
 		try {
-			// fixa query
-		String requestQuery = "SELECT * FROM feed WHERE message LIKE ? or hashtag LIKE ?";
+			// fixa query att inte använda *
+		String requestQuery = "SELECT message, hashtag, creator, datetime FROM feed WHERE message LIKE ? or hashtag LIKE ?";
 		
 		prepStatement = feedConnection.prepareStatement(requestQuery);
 

@@ -102,10 +102,10 @@ Cookie ck[] = request.getCookies();
 					while (resultSet.next()) {
 						
 						// Creating string variables to show which resultSet result is which.
-						String feedUser = resultSet.getString(4);
-						String feedHashTag = resultSet.getString(3);
-						String feedMessage = resultSet.getString(2);
-						String feedTimeStamp = resultSet.getString(5);
+						String feedUser = resultSet.getString(3);
+						String feedHashTag = resultSet.getString(2);
+						String feedMessage = resultSet.getString(1);
+						String feedTimeStamp = resultSet.getString(4);
 						
 						// Print the feed on the website.
 						out.println("<div class=\"" + divClassForContainer + "\">");
