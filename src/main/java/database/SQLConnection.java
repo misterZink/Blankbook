@@ -47,7 +47,7 @@ public class SQLConnection {
 	
 	
 	public static boolean userSql(UserBean userBean) {
-		
+			boolean closeConnection = false;
 		try {
 			
 			String requestQuery = "SELECT * FROM users WHERE email = ? and password = ?";
@@ -62,12 +62,11 @@ public class SQLConnection {
 			// ResultSet return
 			while (resultSet.next()) {
 				userBean.setName(resultSet.getString("fullname"));
-				return true;
+				closeConnection = true;
 			}
 			
 			userConnection.endRequest();
 			userConnection.close();
-			
 			
 		} catch (SQLException e) {
 			System.out.println("userSql");
@@ -75,7 +74,7 @@ public class SQLConnection {
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("VendorError: " + e.getErrorCode());
 		}
-		return false;
+		return closeConnection;
 	}
 	
 	
@@ -110,6 +109,7 @@ public class SQLConnection {
 	public static ResultSet getFeedFromSql() {
 		try {
 			
+			// fixa query att inte använda *
 			String requestQuery = "SELECT * FROM feed";
 
 			prepStatement = feedConnection.prepareStatement(requestQuery);
@@ -147,6 +147,7 @@ public class SQLConnection {
 		
 		
 		try {
+			// fixa query
 		String requestQuery = "SELECT * FROM feed WHERE message LIKE ? or hashtag LIKE ?";
 		
 		prepStatement = feedConnection.prepareStatement(requestQuery);
@@ -165,6 +166,4 @@ public class SQLConnection {
 		}
 		
 	}
-	
-	
 }
